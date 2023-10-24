@@ -11,7 +11,7 @@ import Comments from "../../components/comments/Comments";
 import ModifyPost from "../../components/modifyPost/ModifyPost";
 
 const Blog = () => {
-  const { dataBlog, modify, setModify } = useContext(PostProvider);
+  const { modify, setModify } = useContext(PostProvider);
   const [blog, setBlog] = useState([]);
   const [loading, setLoading] = useState(true);
   const params = useParams();
@@ -19,18 +19,31 @@ const Blog = () => {
   const { id } = params;
 
   useEffect(() => {
-    const singleBlog = dataBlog.posts.find(
-      (post) => post._id.toString() === id
-    );
-
-    if (singleBlog) {
-      setBlog(singleBlog);
-      setLoading(false);
-    } else {
-      navigate("/404");
-    }
+    setModify(false);
+    getPostId();
   }, []);
 
+  const getPostId = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_BASE_URL}/blogposts/${id}`,
+        {
+          headers: {
+            Authorization: JSON.parse(localStorage.getItem("loggedInUser")),
+          },
+        }
+      );
+
+      if (response.data.post) {
+        setBlog(response.data.post);
+        setLoading(false);
+      } else {
+        navigate("/404");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const delPost = async () => {
     try {
       const response = await axios.delete(

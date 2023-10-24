@@ -10,6 +10,7 @@ import ProtectedRoutes from "./middlewares/ProtectedRoutes";
 import PostContext from "./contexts/reactContext";
 import SettingAuthorImg from "./views/settings/SettingAuthorImg";
 import Success from "./views/success/Success";
+import NotFound from "./views/notFound/NotFound";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/new" element={<NewBlogPost />} />
             <Route path="/settings" exact element={<SettingAuthorImg />} />
             <Route path="/success/:tokengit" element={<Success />} />
+            <Route path="/*" element={<NotFound />} />
           </Route>
         </Routes>
       </PostContext>

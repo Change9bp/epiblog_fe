@@ -24,18 +24,28 @@ const SingleComment = ({ comment, idPost }) => {
           ? window.confirm("Sei sicuro di voler cancellare il commento?")
           : !!methodFetch
       ) {
-        const response = await axios[methodFetch](
-          `${process.env.REACT_APP_SERVER_BASE_URL}/blogposts/${idPost.idPost}/comments/${_id}`,
-          commEdit,
-          {
-            headers: {
-              Authorization: JSON.parse(localStorage.getItem("loggedInUser")),
-            },
-          }
-        );
-        methodFetch === "patch" && setInEditing(!inEditing);
+        if (methodFetch === "patch") {
+          const response = await axios[methodFetch](
+            `${process.env.REACT_APP_SERVER_BASE_URL}/blogposts/${idPost.idPost}/comments/${_id}`,
+            commEdit,
+            {
+              headers: {
+                Authorization: JSON.parse(localStorage.getItem("loggedInUser")),
+              },
+            }
+          );
+          setInEditing(!inEditing);
+        } else {
+          const response = await axios[methodFetch](
+            `${process.env.REACT_APP_SERVER_BASE_URL}/blogposts/${idPost.idPost}/comments/${_id}`,
+            {
+              headers: {
+                Authorization: JSON.parse(localStorage.getItem("loggedInUser")),
+              },
+            }
+          );
+        }
       }
-      //  getComments();
     } catch (error) {
       console.log(error);
     }
@@ -106,7 +116,7 @@ const SingleComment = ({ comment, idPost }) => {
           <Button onClick={() => setInEditing(!inEditing)} size="sm">
             Edit
           </Button>
-          ,
+
           <Button onClick={() => patchDelComment("delete")} size="sm">
             Delete
           </Button>
